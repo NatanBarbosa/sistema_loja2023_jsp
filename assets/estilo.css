@@ -1,0 +1,8 @@
+.bold {
+  font-weight: bold;
+}
+
+.container {
+  max-width: 800px !important;
+  border-radius: 8px;
+}
