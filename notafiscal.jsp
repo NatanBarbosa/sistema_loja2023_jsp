@@ -136,7 +136,7 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = action + "_notafiscal.jsp"
+                    document.cadastro.action = "notafiscal_actions/" + action + "_notafiscal.jsp"
                     document.cadastro.submit()
                 }
             };

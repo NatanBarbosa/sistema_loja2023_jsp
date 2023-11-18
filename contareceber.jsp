@@ -153,7 +153,7 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = action + "_contareceber.jsp"
+                    document.cadastro.action = "contareceber_actions/" + action + "_contareceber.jsp"
                     document.cadastro.submit()
                 }
             };
