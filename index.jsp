@@ -3,7 +3,9 @@
    <%-- <jsp:useBean id="con" class="sistema.login.ConexaoLogin"/> --%>
    <%@ page import="conexao_notafiscal.Conexao_notafiscal2" %>
    <%@ page import="sistema_loja2023.TesteConexao" %>
- 
+   <%@ page import="sistema_loja2023.repository.ProdutosRepository" %>
+   <%@ page import="java.util.List" %>
+   <%@ page import="sistema_loja2023.model.Produto" %>
 
 <%
     String cp_codigo=request.getParameter("cp_codigo");
@@ -25,10 +27,14 @@
     retorno = teste.testar();
     // retorno = "asasas";
 
+    // ProdutosRepository repo = new ProdutosRepository();
+    // List lista = repo.obterProdutos();
+    ProdutosRepository repo = new ProdutosRepository();
+    List<Produto> lista = repo.obterProdutos();
     
 %>
 
-<%= retorno %>
+<%= lista.get(0).getPro_descricao() %>
 
 
 
