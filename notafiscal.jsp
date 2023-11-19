@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+   <%@ page import="sistema_loja2023.Service.LoginService" %>
+
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
 <html>
@@ -22,6 +24,10 @@
     String nf_taxaimpostonf=request.getParameter("nf_taxaimpostonf");
     String nf_valorimposto=request.getParameter("nf_valorimposto");
     String status=request.getParameter("status");
+
+    if (!LoginService.estaLogado()) {
+        response.sendRedirect("/sistema/index.jsp");
+    }
 %>
 
 <body>

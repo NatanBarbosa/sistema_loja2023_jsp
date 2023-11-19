@@ -1,20 +1,56 @@
 
-<%@ page import="sistema_loja2023.Service.LoginService" %>
+ <%-- <jsp:useBean id="con" class="conexao_notafiscal.Conexao_notafiscal"/> --%>
+   <%-- <jsp:useBean id="con" class="sistema.login.ConexaoLogin"/> --%>
+   <%@ page import="conexao_notafiscal.Conexao_notafiscal2" %>
+   <%@ page import="sistema_loja2023.TesteConexao" %>
+   <%@ page import="sistema_loja2023.repository.ProdutosRepository" %>
+   <%@ page import="java.util.List" %>
+   <%@ page import="sistema_loja2023.model.Produto" %>
+   <%@ page import="sistema_loja2023.Service.LoginService" %>
 
 <%
+    String cp_codigo=request.getParameter("cp_codigo");
 
     String login = request.getParameter("login");
     String senha = request.getParameter("senha");
+    // if (loginService.validarLogin(login, senha)) {
+    //     response.sendRedirect("http://localhost:8084/sistema/?a=oi");
+    // }
+    boolean a = false;
 
     if(login != null && senha != null) {
-        LoginService.validarLogin(login, senha);
+        a = LoginService.validarLogin(login, senha);
     }
 
-    if(LoginService.estaLogado()) {
-        response.sendRedirect("/sistema/notafiscal.jsp");
-    }
+
+    String retorno = "";
+    Conexao_notafiscal2 cn = new Conexao_notafiscal2();
+    retorno = cn.teste();
+
+    
+    // Login loginClass = new Login();
+    // String retorno = loginClass.ola();
+
+    // Teste teste = new Teste();
+    // retorno = teste.teste();
+    TesteConexao teste = new TesteConexao();
+    retorno = teste.testar();
+
+    session.setAttribute("comments", "oia");
+    // retorno = "asasas";
+
+    // ProdutosRepository repo = new ProdutosRepository();
+    // List lista = repo.obterProdutos();
+    ProdutosRepository repo = new ProdutosRepository();
+    List<Produto> lista = repo.obterProdutos();
     
 %>
+
+<%= lista.get(0).getPro_descricao() %>
+<%= session.getAttribute("comments") %>
+<%= LoginService.estaLogado() == true %>
+<%= a == true%>
+
 
 
 <!DOCTYPE html>
