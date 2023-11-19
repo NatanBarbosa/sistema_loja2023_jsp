@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ include file="./verificarLogin.jsp" %>
+<%@ page import="sistema_loja2023.service.ProdutoService" %>
+<%@ page import="sistema_loja2023.model.Produto" %>
+
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
 <html>
@@ -17,14 +21,43 @@
 
 <%
     String pro_codigo=request.getParameter("pro_codigo");
-    String pro_descricao=request.getParameter("pro_descricao");
-    String tpp_codigo=request.getParameter("tpp_codigo");
-    String pro_precocusto=request.getParameter("pro_precocusto");
-    String pro_precovenda=request.getParameter("pro_precovenda");
-    String pro_estoque=request.getParameter("pro_estoque");
-    String pro_embalagem=request.getParameter("pro_embalagem");
-    String pro_ipi=request.getParameter("pro_ipi");
-    String status=request.getParameter("status");
+    String action = request.getParameter("action");
+
+    ProdutoService produtoService = new ProdutoService();
+    String status = request.getParameter("status");
+
+    String[] parametros = {
+        request.getParameter("pro_codigo"),
+        request.getParameter("pro_descricao"),
+        request.getParameter("tpp_codigo"),
+        request.getParameter("pro_precocusto"),
+        request.getParameter("pro_precovenda"),
+        request.getParameter("pro_estoque"),
+        request.getParameter("pro_embalagem"),
+        request.getParameter("pro_ipi")
+    };
+
+    Produto produto = Produto.mapearComParametros(parametros);
+
+    Produto produtoPesquisado = new Produto();
+
+    if ("consultar".equals(action)) {
+        produtoPesquisado = produtoService.obter(produto.getPro_codigo());
+
+    } else if ("cadastrar".equals(action)) {
+        produtoService.inserir(produto);
+
+    } else if ("alterar".equals(action)) {
+        produtoService.alterar(produto);
+
+    } else if ("excluir".equals(action)) {
+        produtoService.excluir(produto.getPro_codigo());
+
+    } else {
+        produtoPesquisado = produtoService.obter(produto.getPro_codigo());
+    }
+
+
 %>
 
 <body>
@@ -41,48 +74,48 @@
                     <div class="mb-3">
                         <label for="pro_codigoField" class="form-label">Codigo</label>
                         <input type="text" class="form-control" id="pro_codigoField" name="pro_codigoField"
-                            value='<%= (pro_codigo==null) ? "" : pro_codigo %>' />
+                            value='<%= (produto.getPro_codigo()==null) ? "" : produto.getPro_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_descricaoField" class="form-label">Descrição</label>
                         <input type="text" class="form-control" id="pro_descricaoField" name="pro_descricaoField"
-                            value='<%= (pro_descricao==null) ? "" : pro_descricao %>' />
+                            value='<%= (produto.getPro_descricao()==null) ? "" : produto.getPro_descricao() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="tpp_codigoField" class="form-label">Codigo Tipo de Produto</label>
                         <input type="text" class="form-control" id="tpp_codigoField"
                             name="tpp_codigoField"
-                            value='<%= tpp_codigo == null ? "" : tpp_codigo %>' />
+                            value='<%= produto.getTtp_codigo() == null ? "" : produto.getTtp_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_precocustoField" class="form-label">Preço de custo</label>
                         <input type="text" class="form-control" id="pro_precocustoField"
                             name="pro_precocustoField"
-                            value='<%= pro_precocusto == null ? "" : pro_precocusto %>' />
+                            value='<%= produto.getPro_precocusto() == null ? "" : produto.getPro_precocusto() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_precovendaField" class="form-label">Preço de venda</label>
                         <input type="text" class="form-control" id="pro_precovendaField"
                             name="pro_precovendaField"
-                            value='<%= pro_precovenda == null ? "" : pro_precovenda %>' />
+                            value='<%= produto.getPro_precovenda() == null ? "" : produto.getPro_precovenda() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_estoqueField" class="form-label">Quantidade em Estoque</label>
                         <input type="text" class="form-control" id="pro_estoqueField"
                             name="pro_estoqueField"
-                            value='<%= pro_estoque == null ? "" : pro_estoque %>' />
+                            value='<%= produto.getPro_estoque() == null ? "" : produto.getPro_estoque() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_embalagemField" class="form-label">Embalagem</label>
                         <input type="text" class="form-control" id="pro_embalagemField"
                             name="pro_embalagemField"
-                            value='<%= pro_embalagem == null ? "" : pro_embalagem %>' />
+                            value='<%= produto.getPro_embalagem() == null ? "" : produto.getPro_embalagem() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="pro_ipiField" class="form-label">IPI</label>
                         <input type="text" class="form-control" id="pro_ipiField"
                             name="pro_ipiField"
-                            value='<%= pro_ipi == null ? "" : pro_ipi %>' />
+                            value='<%= produto.getPro_ipi() == null ? "" : produto.getPro_ipi() %>' />
                     </div>
                 </div>
             </div>
@@ -171,7 +204,7 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = action + "_produtos.jsp"
+                    document.cadastro.action = "produtos.jsp?" + action;
                     document.cadastro.submit()
                 }
             };

@@ -2,20 +2,28 @@
 <%@ page import="sistema_loja2023.Service.LoginService" %>
 
 <%
+    if(session.getAttribute("logado") != null) {
+        if(session.getAttribute("logado").toString().equals("true") ) {
+                response.sendRedirect("/sistema/notafiscal.jsp");
+        } 
+    }
 
+  
     String login = request.getParameter("login");
     String senha = request.getParameter("senha");
 
+    session.setAttribute("logado", "false");
+
     if(login != null && senha != null) {
-        LoginService.validarLogin(login, senha);
+        boolean valido = LoginService.validarLogin(login, senha);
+        session.setAttribute("logado", valido);
     }
 
-    if(LoginService.estaLogado()) {
+    if(session.getAttribute("logado").toString().equals("true") ) {
         response.sendRedirect("/sistema/notafiscal.jsp");
     }
     
 %>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">

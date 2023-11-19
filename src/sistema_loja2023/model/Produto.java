@@ -10,6 +10,20 @@ public class Produto {
     private String pro_embalagem;
     private Float pro_ipi;
 
+    public static Produto mapearComParametros(String[] parameters) {
+        Produto produto = new Produto();
+        produto.setPro_codigo(Integer.parseInt(parameters[0]));
+        produto.setPro_descricao(parameters[1]);
+        produto.setTtp_codigo(Integer.parseInt(parameters[2]));
+        produto.setPro_precocusto(Float.parseFloat(parameters[3]));
+        produto.setPro_precovenda(Float.parseFloat(parameters[4]));
+        produto.setPro_estoque(Float.parseFloat(parameters[5]));
+        produto.setPro_embalagem(parameters[6]);
+        produto.setPro_ipi(Float.parseFloat(parameters[7]));
+
+        return produto;
+    }
+
 
     public Integer getPro_codigo() {
         return this.pro_codigo;

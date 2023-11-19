@@ -18,16 +18,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso--" />
 </head>
 
+<%@ include file="./verificarLogin.jsp" %>
 <%
     String nf_codigo=request.getParameter("nf_codigo");
     String nf_valornf=request.getParameter("nf_valornf");
     String nf_taxaimpostonf=request.getParameter("nf_taxaimpostonf");
     String nf_valorimposto=request.getParameter("nf_valorimposto");
     String status=request.getParameter("status");
-
-    if (!LoginService.estaLogado()) {
-        response.sendRedirect("/sistema/index.jsp");
-    }
 %>
 
 <body>
