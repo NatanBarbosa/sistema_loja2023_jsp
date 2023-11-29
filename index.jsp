@@ -11,7 +11,7 @@
     }
 
     if(LoginService.estaLogado()) {
-        response.sendRedirect("/sistema/notafiscal.jsp");
+        response.sendRedirect("/sistema_loja2023/notafiscal.jsp");
     }
     
 %>
