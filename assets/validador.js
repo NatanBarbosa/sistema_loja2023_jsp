@@ -11,7 +11,7 @@ function validador(listaCampos) {
     if((input_type == "HTMLInputElement" || input_type == "HTMLTextAreaElement") && input.getAttribute('type') != "checkbox"){
       if (input.value == "") {
         let label = document.querySelector(`[for=${input.id}]`)
-        document.cadastro.statusField.value = `Preencha o campo ${label.innerHTML}`
+        document.cadastro.status.value = `Preencha o campo ${label.innerHTML}`
         valid = false
       }
     } else if (input_type == "RadioNodeList"){
@@ -24,14 +24,14 @@ function validador(listaCampos) {
 
       if(!some_checked){
         let label = document.querySelector(`[for=${input[0].name}]`)
-        document.cadastro.statusField.value = `Preencha o campo ${label.innerHTML}`
+        document.cadastro.status.value = `Preencha o campo ${label.innerHTML}`
         valid = false
       }
     }
   });
 
   if (valid) {
-    document.cadastro.statusField.value = ""
+    document.cadastro.status.value = ""
   }
 
   return valid

@@ -2,13 +2,18 @@
 <%@ page import="sistema_loja2023.Service.LoginService" %>
 
 <%
+    String rootPath = "sistema_loja2023";
+    if (session.getAttribute("rootPath") != null) {
+        rootPath = (String) session.getAttribute("rootPath");
+    }
+    session.setAttribute("rootPath", rootPath);
+
     if(session.getAttribute("logado") != null) {
         if(session.getAttribute("logado").toString().equals("true") ) {
-                response.sendRedirect("/sistema/notafiscal.jsp");
+            response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
         } 
     }
 
-  
     String login = request.getParameter("login");
     String senha = request.getParameter("senha");
 
@@ -20,7 +25,7 @@
     }
 
     if(session.getAttribute("logado").toString().equals("true") ) {
-        response.sendRedirect("/sistema/notafiscal.jsp");
+        response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
     }
     
 %>

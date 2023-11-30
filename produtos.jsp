@@ -2,11 +2,14 @@
 <%@ include file="./verificarLogin.jsp" %>
 <%@ page import="sistema_loja2023.service.ProdutoService" %>
 <%@ page import="sistema_loja2023.model.Produto" %>
+<%@ page import="sistema_loja2023.infraestructure.exceptions.CustomException" %>
 
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabela Produtos</title>
 
     <link rel="stylesheet" href="assets/estilo.css" />
@@ -26,6 +29,10 @@
     ProdutoService produtoService = new ProdutoService();
     String status = request.getParameter("status");
 
+    String errorMessage = null;
+    String errorDetail = null;
+
+
     String[] parametros = {
         request.getParameter("pro_codigo"),
         request.getParameter("pro_descricao"),
@@ -37,30 +44,76 @@
         request.getParameter("pro_ipi")
     };
 
-    Produto produto = Produto.mapearComParametros(parametros);
+    Produto produto = new Produto();
 
+    try {
+        produto = Produto.mapearComParametros(parametros);
+
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
+    }
+
+    
     Produto produtoPesquisado = new Produto();
 
-    if ("consultar".equals(action)) {
-        produtoPesquisado = produtoService.obter(produto.getPro_codigo());
+    try {
+        if (action != null) {
+            
+            if (action.equals("consultar")) {
+                produtoPesquisado = produtoService.obter(produto.getPro_codigo());
+                status = "Pesquisado com sucesso";
+                if (produtoPesquisado == null) {
+                    produtoPesquisado = new Produto();
+                    status = "Registro inexistente";
+                }
+              
 
-    } else if ("cadastrar".equals(action)) {
-        produtoService.inserir(produto);
+            } else if (action.equals("cadastrar")) {
+                produtoService.inserir(produto);
+                status = "Cadastrado com sucesso";
 
-    } else if ("alterar".equals(action)) {
-        produtoService.alterar(produto);
+            } else if (action.equals("alterar")) {
+                produtoService.alterar(produto);
+                status = "Alterado com sucesso";
+        
+            } else if (action.equals("excluir")) {
+                produtoService.excluir(produto.getPro_codigo());
+                status = "Excluído com sucesso";
+            } 
+        } 
+        else {
+            produtoPesquisado = produtoService.obter(1);
+            status = "Pesquisado com sucesso";
+             if (produtoPesquisado == null) {
+                produtoPesquisado = new Produto();
+                status = "Registro inexistente";
+            }
+        }
 
-    } else if ("excluir".equals(action)) {
-        produtoService.excluir(produto.getPro_codigo());
-
-    } else {
-        produtoPesquisado = produtoService.obter(produto.getPro_codigo());
+    } catch (CustomException e) {
+        errorMessage = e.getMessage();
+        errorDetail = e.getDetail();
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
     }
 
 
 %>
 
 <body>
+    <% if (errorMessage != null) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=errorMessage%>
+
+            <% if (errorDetail != null) { %>
+                <br><br>
+                <%=errorDetail%>
+            <% } %>
+        </div>
+    <% } %>
+
     <div class="container bg-primary-subtle my-3">
         <div class="row">
             <div class="col p-2 mt-2">
@@ -68,54 +121,64 @@
             </div>
         </div>
         <hr />
-        <form name="cadastro" method="get">
+        <form name="cadastro" method="post" action="">
+            <input type="hidden" hidden id="action" name="action" value="">
+            <input type="hidden" hidden id="page" name="page" value="produtos.jsp">
             <div class="row">
                 <div class="col">
-                    <div class="mb-3">
-                        <label for="pro_codigoField" class="form-label">Codigo</label>
-                        <input type="text" class="form-control" id="pro_codigoField" name="pro_codigoField"
-                            value='<%= (produto.getPro_codigo()==null) ? "" : produto.getPro_codigo() %>' />
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="pro_codigo" class="form-label">Codigo</label>
+                            <input type="number" class="form-control" id="pro_codigo" name="pro_codigo"
+                                value='<%= (produtoPesquisado.getPro_codigo()==null) ? "" : produtoPesquisado.getPro_codigo() %>' />
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="pro_descricao" class="form-label">Descrição</label>
+                            <input type="text" class="form-control" id="pro_descricao" name="pro_descricao"
+                                value='<%= (produtoPesquisado.getPro_descricao()==null) ? "" : produtoPesquisado.getPro_descricao() %>' />
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="pro_descricaoField" class="form-label">Descrição</label>
-                        <input type="text" class="form-control" id="pro_descricaoField" name="pro_descricaoField"
-                            value='<%= (produto.getPro_descricao()==null) ? "" : produto.getPro_descricao() %>' />
+                     <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="tpp_codigo" class="form-label">Codigo Tipo de Produto</label>
+                            <input type="number" class="form-control" id="tpp_codigo"
+                                name="tpp_codigo"
+                                value='<%= produtoPesquisado.getTtp_codigo() == null ? "" : produtoPesquisado.getTtp_codigo() %>' />
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="pro_precocusto" class="form-label">Preço de custo</label>
+                            <input type="number" class="form-control" id="pro_precocusto"
+                                name="pro_precocusto"
+                                value='<%= produtoPesquisado.getPro_precocusto() == null ? "" : produtoPesquisado.getPro_precocusto() %>' />
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="tpp_codigoField" class="form-label">Codigo Tipo de Produto</label>
-                        <input type="text" class="form-control" id="tpp_codigoField"
-                            name="tpp_codigoField"
-                            value='<%= produto.getTtp_codigo() == null ? "" : produto.getTtp_codigo() %>' />
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="pro_precovenda" class="form-label">Preço de venda</label>
+                            <input type="number" step="0.01" class="form-control" id="pro_precovenda"
+                                name="pro_precovenda"
+                                value='<%= produtoPesquisado.getPro_precovenda() == null ? "" : produtoPesquisado.getPro_precovenda() %>' />
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="pro_estoque" class="form-label">Quantidade em Estoque</label>
+                            <input type="number" class="form-control" id="pro_estoque"
+                                name="pro_estoque"
+                                value='<%= produtoPesquisado.getPro_estoque() == null ? "" : produtoPesquisado.getPro_estoque() %>' />
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="pro_precocustoField" class="form-label">Preço de custo</label>
-                        <input type="text" class="form-control" id="pro_precocustoField"
-                            name="pro_precocustoField"
-                            value='<%= produto.getPro_precocusto() == null ? "" : produto.getPro_precocusto() %>' />
-                    </div>
-                    <div class="mb-3">
-                        <label for="pro_precovendaField" class="form-label">Preço de venda</label>
-                        <input type="text" class="form-control" id="pro_precovendaField"
-                            name="pro_precovendaField"
-                            value='<%= produto.getPro_precovenda() == null ? "" : produto.getPro_precovenda() %>' />
-                    </div>
-                    <div class="mb-3">
-                        <label for="pro_estoqueField" class="form-label">Quantidade em Estoque</label>
-                        <input type="text" class="form-control" id="pro_estoqueField"
-                            name="pro_estoqueField"
-                            value='<%= produto.getPro_estoque() == null ? "" : produto.getPro_estoque() %>' />
-                    </div>
-                    <div class="mb-3">
-                        <label for="pro_embalagemField" class="form-label">Embalagem</label>
-                        <input type="text" class="form-control" id="pro_embalagemField"
-                            name="pro_embalagemField"
-                            value='<%= produto.getPro_embalagem() == null ? "" : produto.getPro_embalagem() %>' />
-                    </div>
-                    <div class="mb-3">
-                        <label for="pro_ipiField" class="form-label">IPI</label>
-                        <input type="text" class="form-control" id="pro_ipiField"
-                            name="pro_ipiField"
-                            value='<%= produto.getPro_ipi() == null ? "" : produto.getPro_ipi() %>' />
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="pro_embalagem" class="form-label">Embalagem</label>
+                            <input type="text" class="form-control" id="pro_embalagem"
+                                name="pro_embalagem"
+                                value='<%= produtoPesquisado.getPro_embalagem() == null ? "" : produtoPesquisado.getPro_embalagem() %>' />
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="pro_ipi" class="form-label">IPI</label>
+                            <input type="number" class="form-control" id="pro_ipi"
+                                name="pro_ipi"
+                                value='<%= produtoPesquisado.getPro_ipi() == null ? "" : produtoPesquisado.getPro_ipi() %>' />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,10 +206,10 @@
                 <div class="col">
                     <div class="mb-3">
                         <div class="input-group">
-                            <span class="input-group-text" id="statusField">Status:</span>
-                            <input type="text" class="form-control" id="statusField" name="statusField" disabled
+                            <span class="input-group-text" id="status">Status:</span>
+                            <input type="text" class="form-control" id="status" name="status" disabled
                                 value='<%= (status==null) ? "" : status %>'
-                                aria-describedby="statusField basic-addon4" />
+                                aria-describedby="status basic-addon4" />
                         </div>
                     </div>
                 </div>
@@ -164,36 +227,36 @@
                 switch (action) {
                     case "cadastrar":
                         required_fields = [
-                            document.cadastro.pro_codigoField,
-                            document.cadastro.pro_descricaoField,
-                            document.cadastro.tpp_codigoField,
-                            document.cadastro.pro_precocustoField,
-                            document.cadastro.pro_precovendaField,
-                            document.cadastro.pro_estoqueField,
-                            document.cadastro.pro_embalagemField,
-                            document.cadastro.pro_ipiField
+                            document.cadastro.pro_codigo,
+                            document.cadastro.pro_descricao,
+                            document.cadastro.tpp_codigo,
+                            document.cadastro.pro_precocusto,
+                            document.cadastro.pro_precovenda,
+                            document.cadastro.pro_estoque,
+                            document.cadastro.pro_embalagem,
+                            document.cadastro.pro_ipi
                         ]
                         break
                     case "consultar":
                         required_fields = [
-                            document.cadastro.pro_codigoField
+                            document.cadastro.pro_codigo
                         ]
                         break
                     case "alterar":
                         required_fields = [
-                            document.cadastro.pro_codigoField,
-                            document.cadastro.pro_descricaoField,
-                            document.cadastro.tpp_codigoField,
-                            document.cadastro.pro_precocustoField,
-                            document.cadastro.pro_precovendaField,
-                            document.cadastro.pro_estoqueField,
-                            document.cadastro.pro_embalagemField,
-                            document.cadastro.pro_ipiField
+                            document.cadastro.pro_codigo,
+                            document.cadastro.pro_descricao,
+                            document.cadastro.tpp_codigo,
+                            document.cadastro.pro_precocusto,
+                            document.cadastro.pro_precovenda,
+                            document.cadastro.pro_estoque,
+                            document.cadastro.pro_embalagem,
+                            document.cadastro.pro_ipi
                         ]
                         break
                     case "excluir":
                         required_fields = [
-                            document.cadastro.pro_codigoField
+                            document.cadastro.pro_codigo
                         ]
                         break
                     case "listar":
@@ -204,7 +267,8 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = "produtos.jsp?" + action;
+                    document.cadastro.action.value=action;
+                    document.cadastro.action = document.cadastro.page.value;
                     document.cadastro.submit()
                 }
             };

@@ -71,32 +71,36 @@ public class ProdutoRepository extends Conexao {
 
             return linhasAfetadas;
         } catch (SQLException e) {
-            throw new CustomException("Erro ao atualizar produto");
+            throw new CustomException("Erro ao atualizar produto", e.getErrorCode() + e.getMessage());
         }
 
     }
 
     public int inserir (Produto produto) throws CustomException {
         String query = "INSERT INTO tb_produtos " +
-                       "(pro_descricao, tpp_codigo, pro_precocusto, pro_precovenda, pro_estoque, pro_embalagem, pro_ipi) " +
-                       "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                       "(pro_codigo, pro_descricao, tpp_codigo, pro_precocusto, pro_precovenda, pro_estoque, pro_embalagem, pro_ipi) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     
         try (Connection con = super.connect();
              PreparedStatement pst = con.prepareStatement(query)) {
     
-            pst.setString(1, produto.getPro_descricao());
-            pst.setInt(2, produto.getTtp_codigo());
-            pst.setDouble(3, produto.getPro_precocusto());
-            pst.setDouble(4, produto.getPro_precovenda());
-            pst.setDouble(5, produto.getPro_estoque());
-            pst.setString(6, produto.getPro_embalagem());
-            pst.setDouble(7, produto.getPro_ipi());
+            pst.setInt(1, produto.getPro_codigo());
+            pst.setString(2, produto.getPro_descricao());
+            pst.setInt(3, produto.getTtp_codigo());
+            pst.setDouble(4, produto.getPro_precocusto());
+            pst.setDouble(5, produto.getPro_precovenda());
+            pst.setDouble(6, produto.getPro_estoque());
+            pst.setString(7, produto.getPro_embalagem());
+            pst.setDouble(8, produto.getPro_ipi());
     
             int linhasAfetadas = pst.executeUpdate();
     
             return linhasAfetadas;
         } catch (SQLException e) {
-            throw new CustomException("Erro ao inserir produto");
+            if(e.getErrorCode() == 1062) {
+                throw new CustomException("Esse código de produto já existe");
+            }
+            throw new CustomException("Erro ao inserir produto", e.getErrorCode() + "");
         }
     }
     
@@ -144,7 +148,7 @@ public class ProdutoRepository extends Conexao {
             int linhasAfetadas = pst.executeUpdate();
             return linhasAfetadas;
         } catch (SQLException e) {
-            throw new CustomException("Erro ao excluir produto");
+            throw new CustomException("Erro ao excluir produto", e.getErrorCode() + " " + e.getMessage());
         }
     }
     
