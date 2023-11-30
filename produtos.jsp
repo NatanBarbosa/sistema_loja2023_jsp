@@ -103,6 +103,7 @@
 %>
 
 <body>
+<%@ include file="./navbar.jsp" %>
     <% if (errorMessage != null) { %>
         <div class="alert alert-danger" role="alert">
             <%=errorMessage%>

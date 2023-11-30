@@ -13,19 +13,20 @@
             response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
         } 
     }
-
-    String login = request.getParameter("login");
-    String senha = request.getParameter("senha");
-
-    session.setAttribute("logado", "false");
-
-    if(login != null && senha != null) {
-        boolean valido = LoginService.validarLogin(login, senha);
-        session.setAttribute("logado", valido);
-    }
-
-    if(session.getAttribute("logado").toString().equals("true") ) {
-        response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
+    else {
+        String login = request.getParameter("login");
+        String senha = request.getParameter("senha");
+    
+        session.setAttribute("logado", "false");
+    
+        if(login != null && senha != null) {
+            boolean valido = LoginService.validarLogin(login, senha);
+            session.setAttribute("logado", valido);
+        }
+    
+        if(session.getAttribute("logado").toString().equals("true") ) {
+            response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
+        }
     }
     
 %>

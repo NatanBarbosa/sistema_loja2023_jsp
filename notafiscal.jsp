@@ -28,6 +28,7 @@
 %>
 
 <body>
+<%@ include file="./navbar.jsp" %>
     <div class="container bg-primary-subtle my-3">
         <div class="row">
             <div class="col p-2 mt-2">
