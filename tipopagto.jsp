@@ -31,12 +31,20 @@
     String errorMessage = null;
     String errorDetail = null;
 
+    String tpg_ativoField = "";
+
+    if(request.getParameter("tpg_ativoField") != null) {
+       tpg_ativoField = "N";
+        if (request.getParameter("tpg_ativoField").equals("on")) {
+           tpg_ativoField = "S";
+        }
+    }
 
     String[] parametros = {
         request.getParameter("tpg_codigoField"),
         request.getParameter("tpg_descricaoField"),
         request.getParameter("tpg_qtdeField"),
-        request.getParameter("tpg_ativoField")
+        tpg_ativoField
     };
 
     TipoPagto tipoPagto = new TipoPagto();
@@ -246,6 +254,10 @@
                 }
 
                 if (validador(required_fields)) {
+                  //  if( document.cadastro.tpg_ativoField.checked = true) {
+                    //    document.cadastro.tpg_ativoField.value = "S";
+                   // }
+
                     document.cadastro.action.value=action;
                     document.cadastro.action = document.cadastro.page.value;
                     document.cadastro.submit()

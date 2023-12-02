@@ -60,8 +60,19 @@ public class TipoPagto {
 	}
 
 	public void setTpg_ativo(String tpg_ativo) {
-        String val = tpg_ativo == "on" ? "S" : "N";
-		this.tpg_ativo = val;
+		if (tpg_ativo == null) {
+			this.tpg_ativo = "N";
+			return;
+		}
+
+		if (tpg_ativo.equals("N")) {
+			this.tpg_ativo = "N";
+		}
+
+		if (tpg_ativo.equals("S")) {
+			this.tpg_ativo = "S";
+		}
+		
 	}
 
 }
