@@ -1,0 +1,23 @@
+Este projeto foi feito com uma adaptação do padrão de MVC do mercado, por tanto ele não foi desenvolvido totalmente com jsp.
+Por esse motivo existem as classes de service, model e repository.
+
+Cada uma dessas camadas são importantes para o projeto.
+Atenção para a classe de conexão com o banco que é a Conexao.java.
+
+Github: https://github.com/NatanBarbosa/sistema_loja2023_jsp
+
+Para executar esse projeto, é necessário compilar a pasta src, e colocá-la na pasta do lib TomCat para rodar
+
+OBS.:
+Existe um aquivo start.bat no repositório que faz essa compilação automaticamente e recarrega o servidor do tomcat atmbém
+
+Para utilizá-lo siga os passos:
+
+1. Abra o terminal de comando como adminstrador ( Necessário para reiniciar o servidor do tomcat ).
+2. Vá até a pasta que está o projeto.
+3. rode o comando: ".\start.bat C:\....\Tomcat7\lib\sistema_loja2023".
+4. Os aquivos serão compilados, e o servidro será inicializado automaticamente.
+
+Também deixei os aquivos .class na pasta \sistema_loja2023 caso seja possivel copiar e colcar os aquivos compilados para a pasta desejada. Pode copiar a pasta e colcar ela inteira
+
+Caso não consiga executar, estamos à disposição
