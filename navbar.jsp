@@ -86,6 +86,9 @@
                             <li>
                                 <a href="contapagar.jsp" class="nav-link px-0">Contas a Pagar</a>
                             </li>
+                            <li>
+                                <a href="tipopagto.jsp" class="nav-link px-0">Tipos de Pagamento</a>
+                            </li>
                         </ul>
                     </li>
                     <li>

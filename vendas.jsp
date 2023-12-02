@@ -116,7 +116,7 @@
             </div>
         </div>
         <hr />
-        <form name="cadastro" method="get">
+        <form name="cadastro" method="post">
             <input type="hidden" hidden id="action" name="action" value="">
             <input type="hidden" hidden id="page" name="page" value="vendas.jsp">
             <div class="row">
