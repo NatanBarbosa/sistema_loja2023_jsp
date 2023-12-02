@@ -8,9 +8,7 @@
         session.getAttribute("logado") == null 
     ) {
         response.sendRedirect("/"+rootPath+"/index.jsp");
-    }
-
-    if(
+    } else if(
         session.getAttribute("logado") == null || 
         !session.getAttribute("logado").toString().equals("true")
     ) {
