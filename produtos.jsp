@@ -116,7 +116,7 @@
         </div>
     <% } %>
 
-    <div class="container bg-primary-subtle my-3">
+    <div class="container bg-primary-subtle content-area">
         <div class="row">
             <div class="col p-2 mt-2">
                 <h3 class="text-primary text-center">Cadastro Produtos</h3>

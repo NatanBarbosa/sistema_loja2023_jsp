@@ -1,3 +1,32 @@
+html, body{
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  top: 0;
+}
+
+.left-bar, .left-bar *,  .left-bar a{
+  top: 0;
+  color: white;
+  z-index: 1;
+  max-width: 210px;
+}
+
+ul[data-bs-parent="#menu"]{
+  margin-left: 30px !important;
+}
+
+.content-area {
+  z-index: 1000;
+}
+
+.left-bar a:hover {
+  color: rgb(197, 197, 197);
+}
+
 .bold {
   font-weight: bold;
 }
@@ -5,4 +34,6 @@
 .container {
   max-width: 800px !important;
   border-radius: 8px;
+  /* position: relative; */
+  /* margin-left: 690px; */
 }
