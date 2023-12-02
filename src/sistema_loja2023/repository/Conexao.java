@@ -7,8 +7,8 @@ public class Conexao {
     private String driver = "org.gjt.mm.mysql.Driver";
 	private String url = "jdbc:mysql://127.0.0.1:3306/sistema_loja2023";
 	private String user = "root";
-	// private String password = System.getenv("bd_password");
 	private String password = "vertrigo";
+	//private String password = "";
 
 	protected Connection connect () {
 		Connection con = null;
