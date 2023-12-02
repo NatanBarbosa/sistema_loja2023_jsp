@@ -100,7 +100,7 @@ public class ProdutoRepository extends Conexao {
             if(e.getErrorCode() == 1062) {
                 throw new CustomException("Esse código de produto já existe");
             }
-            throw new CustomException("Erro ao inserir produto", e.getErrorCode() + "");
+            throw new CustomException("Erro ao inserir produto", e.getMessage() + "");
         }
     }
     

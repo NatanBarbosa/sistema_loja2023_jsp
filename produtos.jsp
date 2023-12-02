@@ -2,6 +2,7 @@
 <%@ include file="./verificarLogin.jsp" %>
 <%@ page import="sistema_loja2023.service.ProdutoService" %>
 <%@ page import="sistema_loja2023.model.Produto" %>
+<%@ page import="java.util.List" %>
 <%@ page import="sistema_loja2023.infraestructure.exceptions.CustomException" %>
 
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
@@ -217,6 +218,40 @@
             </div>
         </form>
     </div>
+
+    <% if(action != null && action.equals("listar")) {%>
+        <table class="table table-striped-columns table-secondary container">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Id Tipo do Produto</th>
+                    <th scope="col">Preço de custo</th>
+                    <th scope="col">Preço de venda</th>
+                    <th scope="col">Estoque</th>
+                    <th scope="col">Embalagem</th>
+                    <th scope="col">IPI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    List<Produto> lista_produtos = produtoService.listarTodos();
+                    for(int i = 0; i < lista_produtos.size(); i++){
+                %>
+                    <tr>
+                        <td><%= lista_produtos.get(i).pro_codigo %></td>
+                        <td><%= lista_produtos.get(i).pro_descricao %></td>
+                        <td><%= lista_produtos.get(i).pro_precocusto %></td>
+                        <td><%= lista_produtos.get(i).pro_precocusto %></td>
+                        <td><%= lista_produtos.get(i).pro_estoque %></td>
+                        <td><%= lista_produtos.get(i).pro_estoque %></td>
+                        <td><%= lista_produtos.get(i).pro_embalagem %></td>
+                        <td><%= lista_produtos.get(i).pro_ipi %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
 
     <script src="assets/validador.js"></script>
     <script>

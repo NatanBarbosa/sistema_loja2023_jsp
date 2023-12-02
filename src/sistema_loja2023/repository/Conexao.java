@@ -8,7 +8,7 @@ public class Conexao {
 	private String url = "jdbc:mysql://127.0.0.1:3306/sistema_loja2023";
 	private String user = "root";
 	// private String password = System.getenv("bd_password");
-	private String password = "root";
+	private String password = "vertrigo";
 
 	protected Connection connect () {
 		Connection con = null;
