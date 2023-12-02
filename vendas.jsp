@@ -1,4 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ include file="./verificarLogin.jsp" %>
+<%@ page import="sistema_loja2023.service.VendaService" %>
+<%@ page import="sistema_loja2023.model.Venda" %>
+<%@ page import="java.util.List" %>
+<%@ page import="sistema_loja2023.infraestructure.exceptions.CustomException" %>
+
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
 <html>
@@ -17,16 +23,82 @@
 
 <%
     String ven_codigo=request.getParameter("ven_codigo");
-    String tpg_codigo=request.getParameter("tpg_codigo");
-    String fun_codigo=request.getParameter("fun_codigo");
-    String nf_codigo=request.getParameter("nf_codigo");
-    String ven_datavenda=request.getParameter("ven_datavenda");
-    String ven_valortotal=request.getParameter("ven_valortotal");
-    String ven_observacoes=request.getParameter("ven_observacoes");
-    String status=request.getParameter("status");
+    String action = request.getParameter("action");
+
+    VendaService vendaService = new VendaService();
+    String status = request.getParameter("statusField");
+
+    String errorMessage = null;
+    String errorDetail = null;
+
+
+    String[] parametros = {
+        request.getParameter("ven_codigoField"),
+        request.getParameter("tpg_codigoField"),
+        request.getParameter("fun_codigoField"),
+        request.getParameter("nf_codigoField"),
+        request.getParameter("ven_datavendaField"),
+        request.getParameter("ven_valortotalField"),
+        request.getParameter("ven_observacoesField")
+    };
+
+    Venda venda = new Venda();
+
+    try {
+        venda = Venda.mapearComParametros(parametros);
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
+    }
+
+    
+    Venda vendaPesquisado = new Venda();
+
+    try {
+        if (action != null) {
+            
+            if (action.equals("consultar")) {
+                vendaPesquisado = vendaService.obter(venda.getVen_codigo());
+                status = "Pesquisado com sucesso";
+                if (vendaPesquisado == null) {
+                    vendaPesquisado = new Venda();
+                    status = "Registro inexistente";
+                }
+              
+
+            } else if (action.equals("cadastrar")) {
+                vendaService.inserir(venda);
+                status = "Cadastrado com sucesso";
+
+            } else if (action.equals("alterar")) {
+                vendaService.alterar(venda);
+                status = "Alterado com sucesso";
+        
+            } else if (action.equals("excluir")) {
+                vendaService.excluir(venda.getVen_codigo());
+                status = "Excluído com sucesso";
+            } 
+        } 
+        else {
+            vendaPesquisado = vendaService.obter(1);
+            status = "Pesquisado com sucesso";
+             if (vendaPesquisado == null) {
+                vendaPesquisado = new Venda();
+                status = "Registro inexistente";
+            }
+        }
+
+    } catch (CustomException e) {
+        errorMessage = e.getMessage();
+        errorDetail = e.getDetail();
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
+    }
 %>
 
 <body>
+    <%@ include file="./navbar.jsp" %>
     <div class="container bg-primary-subtle my-3">
         <div class="row">
             <div class="col p-2 mt-2">
@@ -35,47 +107,49 @@
         </div>
         <hr />
         <form name="cadastro" method="get">
+            <input type="hidden" hidden id="action" name="action" value="">
+            <input type="hidden" hidden id="page" name="page" value="compras.jsp">
             <div class="row">
                 <div class="col">
                     <div class="mb-3">
                         <label for="ven_codigoField" class="form-label">Codigo</label>
                         <input type="text" class="form-control" id="ven_codigoField" name="ven_codigoField"
-                            value='<%= (ven_codigo==null) ? "" : ven_codigo %>' />
+                            value='<%= (vendaPesquisado.getVen_codigo()==null) ? "" : vendaPesquisado.getVen_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="tpg_codigoField" class="form-label">Codigo Tipo de pagamento</label>
                         <input type="text" class="form-control" id="tpg_codigoField" name="tpg_codigoField"
-                            value='<%= (tpg_codigo==null) ? "" : tpg_codigo %>' />
+                            value='<%= (vendaPesquisado.getTpg_codigo()==null) ? "" : vendaPesquisado.getTpg_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="fun_codigoField" class="form-label">Codigo Funcionário</label>
                         <input type="text" class="form-control" id="fun_codigoField"
                             name="fun_codigoField"
-                            value='<%= (fun_codigo==null) ? "" : fun_codigo %>' />
+                            value='<%= (vendaPesquisado.getFun_codigo()==null) ? "" : vendaPesquisado.getFun_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="nf_codigoField" class="form-label">Codigo Nota fiscal</label>
                         <input type="text" class="form-control" id="nf_codigoField"
                             name="nf_codigoField"
-                            value='<%= nf_codigo == null ? "" : nf_codigo %>' />
+                            value='<%= vendaPesquisado.getNf_codigo() == null ? "" : vendaPesquisado.getNf_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="ven_datavendaField" class="form-label">Data da venda</label>
                         <input type="date" class="form-control" id="ven_datavendaField"
                             name="ven_datavendaField"
-                            value='<%= ven_datavenda == null ? "" : ven_datavenda %>' />
+                            value='<%= vendaPesquisado.getVen_datavenda() == null ? "" : vendaPesquisado.getVen_datavenda() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="ven_valortotalField" class="form-label">Valor Total</label>
                         <input type="text" class="form-control" id="ven_valortotalField"
                             name="ven_valortotalField"
-                            value='<%= ven_valortotal == null ? "" : ven_valortotal %>' />
+                            value='<%= vendaPesquisado.getVen_valortotal() == null ? "" : vendaPesquisado.getVen_valortotal() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="ven_observacoesField" class="form-label">Observações</label>
                         <textarea class="form-control" id="ven_observacoesField"
                             name="ven_observacoesField"
-                            ><%= ven_observacoes == null ? "" : ven_observacoes %></textarea>
+                            ><%= vendaPesquisado.getVen_observacoes() == null ? "" : vendaPesquisado.getVen_observacoes() %></textarea>
                     </div>
                 </div>
             </div>
@@ -113,6 +187,37 @@
             </div>
         </form>
     </div>
+    <% if(action != null && action.equals("listar")) {%>
+        <table class="table table-striped-columns table-secondary container">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Id Tipo de pagamento</th>
+                    <th scope="col">Id Fornecedor</th>
+                    <th scope="col">Id Nota Fiscal</th>
+                    <th scope="col">Data da compra</th>
+                    <th scope="col">Valor total</th>
+                    <th scope="col">Observações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    List<Venda> lista_vendas = vendaService.listarTodos();
+                    for(int i = 0; i < lista_vendas.size(); i++){
+                %>
+                    <tr>
+                        <td><%= lista_vendas.get(i).ven_codigo %></td>
+                        <td><%= lista_vendas.get(i).tpg_codigo %></td>
+                        <td><%= lista_vendas.get(i).fun_codigo %></td>
+                        <td><%= lista_vendas.get(i).nf_codigo %></td>
+                        <td><%= lista_vendas.get(i).ven_datavenda %></td>
+                        <td><%= lista_vendas.get(i).ven_valortotal %></td>
+                        <td><%= lista_vendas.get(i).ven_observacoes %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
 
     <script src="assets/validador.js"></script>
     <script>
@@ -162,7 +267,8 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = action + "_compras.jsp"
+                    document.cadastro.action.value=action;
+                    document.cadastro.action = document.cadastro.page.value;
                     document.cadastro.submit()
                 }
             };
