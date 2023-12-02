@@ -8,12 +8,9 @@
     }
     session.setAttribute("rootPath", rootPath);
 
-    if(session.getAttribute("logado") != null) {
-        if(session.getAttribute("logado").toString().equals("true") ) {
-            response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
-        } 
-    }
-    else {
+    if(session.getAttribute("logado") != null && session.getAttribute("logado").toString().equals("true")) {
+        response.sendRedirect("/"+rootPath+"/notafiscal.jsp");
+    } else {
         String login = request.getParameter("login");
         String senha = request.getParameter("senha");
     
@@ -60,26 +57,25 @@
     <div class="container login-container">
         <div class="row">
             <div class="col-12 col-lg-6 mx-auto">
-                <form class="login-form">
+                <form class="login-form" action='<%= "/" + rootPath + "/index.jsp"%>'>
                     <div class="form-outline mb-4">
                         Fala professor .... <br>
 
-                        user = admin
+                        user = admin <br>
                         senha = 123
                     </div>
 
                     <div class="form-outline mb-4">
-                      <input type="text" id="usuario" class="form-control" name="login" required/>
                       <label class="form-label" for="usuario">Login</label>
+                      <input type="text" id="usuario" class="form-control" name="login" required/>
                     </div>
                   
                     <div class="form-outline mb-4">
-                      <input type="password" id="senha" class="form-control" name="senha" required />
                       <label class="form-label" for="senha">Senha</label>
+                      <input type="password" id="senha" class="form-control" name="senha" required />
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block mb-4">Entrar</button>
-                  
                     </div>
                 </form>
 

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-   <%@ page import="sistema_loja2023.Service.LoginService" %>
+<%@ page import="sistema_loja2023.Service.LoginService" %>
 
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
