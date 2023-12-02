@@ -26,7 +26,7 @@
     String action = request.getParameter("action");
 
     VendaService vendaService = new VendaService();
-    String status = request.getParameter("statusField");
+    String status = request.getParameter("status");
 
     String errorMessage = null;
     String errorDetail = null;
@@ -108,7 +108,7 @@
         <hr />
         <form name="cadastro" method="get">
             <input type="hidden" hidden id="action" name="action" value="">
-            <input type="hidden" hidden id="page" name="page" value="compras.jsp">
+            <input type="hidden" hidden id="page" name="page" value="vendas.jsp">
             <div class="row">
                 <div class="col">
                     <div class="mb-3">
@@ -178,7 +178,7 @@
                     <div class="mb-3">
                         <div class="input-group">
                             <span class="input-group-text" id="statusField">Status:</span>
-                            <input type="text" class="form-control" id="statusField" name="statusField" disabled
+                            <input type="text" class="form-control" id="status" name="status" disabled
                                 value='<%= (status==null) ? "" : status %>'
                                 aria-describedby="statusField basic-addon4" />
                         </div>
@@ -193,9 +193,9 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Id Tipo de pagamento</th>
-                    <th scope="col">Id Fornecedor</th>
+                    <th scope="col">Id Funcionário</th>
                     <th scope="col">Id Nota Fiscal</th>
-                    <th scope="col">Data da compra</th>
+                    <th scope="col">Data da venda</th>
                     <th scope="col">Valor total</th>
                     <th scope="col">Observações</th>
                 </tr>
