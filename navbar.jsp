@@ -15,6 +15,36 @@
         <li class="nav-item">
           <a class="nav-link" href="notafiscal.jsp">Nota Fiscal</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="compras.jsp">Compras</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="vendas.jsp">Vendas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="itenscompra.jsp">Itens da Compra</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="itensvenda.jsp">Itens da Venda</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tipoproduto.jsp">Tipos de produto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tipopagto.jsp">Tipos de pagamento</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contareceber.jsp">Contas a receber</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contapagar.jsp">Contas a pagar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="funcionario.jsp">Funcionários</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="fornecedor.jsp">Fornecedores</a>
+        </li>
       </ul>
     </div>
   </div>
