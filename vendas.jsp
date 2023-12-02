@@ -99,6 +99,16 @@
 
 <body>
     <%@ include file="./navbar.jsp" %>
+    <% if (errorMessage != null) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=errorMessage%>
+
+            <% if (errorDetail != null) { %>
+                <br><br>
+                <%=errorDetail%>
+            <% } %>
+        </div>
+    <% } %>
     <div class="container bg-primary-subtle my-3">
         <div class="row">
             <div class="col p-2 mt-2">
