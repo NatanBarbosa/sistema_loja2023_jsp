@@ -40,20 +40,20 @@ public class TipoPagtoRepository extends Conexao {
         String query = 
             "UPDATE tb_tipopagto " +
             "SET " +
-            "  tpg_descricao = ? " +
-            "  tpg_qtde = ? " +
+            "  tpg_descricao = ?, " +
+            "  tpg_qtde = ?, " +
             "  tpg_ativo = ? " +
-            "WHERE tpg_codigo = ?";
+            " WHERE tpg_codigo = ?";
 
         try (
                 Connection con = super.connect();
                 PreparedStatement pst = con.prepareStatement(query)
             ) {
 
-            pst.setInt(1, tipoPagto.getTpg_codigo());
-            pst.setString(2, tipoPagto.getTpg_descricao());
-            pst.setInt(3, tipoPagto.getTpg_qtde());
-            pst.setString(4, tipoPagto.getTpg_ativo());
+            pst.setInt(4, tipoPagto.getTpg_codigo());
+            pst.setString(1, tipoPagto.getTpg_descricao());
+            pst.setInt(2, tipoPagto.getTpg_qtde());
+            pst.setString(3, tipoPagto.getTpg_ativo());
 
             int linhasAfetadas = pst.executeUpdate();
 
@@ -116,7 +116,7 @@ public class TipoPagtoRepository extends Conexao {
     }
     
     public int excluir(int codigo) throws CustomException {
-        String query = "DELETE FROM tb_tipoproduto WHERE tpg_codigo = ?";
+        String query = "DELETE FROM tb_tipopagto WHERE tpg_codigo = ?";
     
         try (
             Connection con = super.connect();
