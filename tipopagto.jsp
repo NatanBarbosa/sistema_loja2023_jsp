@@ -1,4 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ include file="./verificarLogin.jsp" %>
+<%@ page import="sistema_loja2023.service.TipoPagtoService" %>
+<%@ page import="sistema_loja2023.model.TipoPagto" %>
+<%@ page import="java.util.List" %>
+<%@ page import="sistema_loja2023.infraestructure.exceptions.CustomException" %>
 <!DOCTYPE html PUBLIC "-//WC//DTD HTML . Transitional//EN" "http://www.w.org/TR/html/loose.dtd">
 
 <html>
@@ -18,13 +23,78 @@
 
 <%
     String tpg_codigo=request.getParameter("tpg_codigo");
-    String tpg_descricao=request.getParameter("tpg_descricao");
-    String tpg_qtde=request.getParameter("tpg_qtde");
-    String tpg_ativo=request.getParameter("tpg_ativo");
-    String status=request.getParameter("status");
+    String action = request.getParameter("action");
+
+    TipoPagtoService tipoPagtoService = new TipoPagtoService();
+    String status = request.getParameter("status");
+
+    String errorMessage = null;
+    String errorDetail = null;
+
+
+    String[] parametros = {
+        request.getParameter("tpp_codigoField"),
+        request.getParameter("tpg_descricaoField"),
+        request.getParameter("tpg_qtdeField"),
+        request.getParameter("tpg_ativoField")
+    };
+
+    TipoPagto tipoPagto = new TipoPagto();
+
+    try {
+        tipoPagto = TipoPagto.mapearComParametros(parametros);
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
+    }
+
+    
+    TipoPagto tipoPagtoPesquisado = new TipoPagto();
+
+    try {
+        if (action != null) {
+            
+            if (action.equals("consultar")) {
+                tipoPagtoPesquisado = tipoPagtoService.obter(tipoPagto.getTpg_codigo());
+                status = "Pesquisado com sucesso";
+                if (tipoPagtoPesquisado == null) {
+                    tipoPagtoPesquisado = new TipoPagto();
+                    status = "Registro inexistente";
+                }
+
+            } else if (action.equals("cadastrar")) {
+                tipoPagtoService.inserir(tipoPagto);
+                status = "Cadastrado com sucesso";
+
+            } else if (action.equals("alterar")) {
+                tipoPagtoService.alterar(tipoPagto);
+                status = "Alterado com sucesso";
+        
+            } else if (action.equals("excluir")) {
+                tipoPagtoService.excluir(tipoPagto.getTpg_codigo());
+                status = "Excluído com sucesso";
+            } 
+        } 
+        else {
+            tipoPagtoPesquisado = tipoPagtoService.obter(1);
+            status = "Pesquisado com sucesso";
+             if (tipoPagtoPesquisado == null) {
+                tipoPagtoPesquisado = new TipoPagto();
+                status = "Registro inexistente";
+            }
+        }
+
+    } catch (CustomException e) {
+        errorMessage = e.getMessage();
+        errorDetail = e.getDetail();
+    } catch (Exception e) {
+        errorMessage = "Um erro inesperado ocorreu!";
+        errorDetail = e.getMessage();
+    }
 %>
 
 <body>
+    <%@ include file="./navbar.jsp" %>
     <div class="container bg-primary-subtle my-3">
         <div class="row">
             <div class="col p-2 mt-2">
@@ -32,30 +102,32 @@
             </div>
         </div>
         <hr />
-        <form name="cadastro" method="get">
+        <form name="cadastro" method="post">
+            <input type="hidden" hidden id="action" name="action" value="">
+            <input type="hidden" hidden id="page" name="page" value="tipopagto.jsp">
             <div class="row">
                 <div class="col">
                     <div class="mb-3">
                         <label for="tpg_codigoField" class="form-label">Codigo</label>
                         <input type="text" class="form-control" id="tpg_codigoField" name="tpg_codigoField"
-                            value='<%= (tpg_codigo==null) ? "" : tpg_codigo %>' />
+                            value='<%= (tipoPagtoPesquisado.getTpg_codigo()==null) ? "" : tipoPagtoPesquisado.getTpg_codigo() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="tpg_descricaoField" class="form-label">Descrição</label>
                         <input type="text" class="form-control" id="tpg_descricaoField" name="tpg_descricaoField"
-                            value='<%= (tpg_descricao==null) ? "" : tpg_descricao %>' />
+                            value='<%= (tipoPagtoPesquisado.getTpg_descricao()==null) ? "" : tipoPagtoPesquisado.getTpg_descricao() %>' />
                     </div>
                     <div class="mb-3">
                         <label for="tpg_qtdeField" class="form-label">Quantidade</label>
                         <input type="text" class="form-control" id="tpg_qtdeField"
                             name="tpg_qtdeField"
-                            value='<%= (tpg_qtde==null) ? "" : tpg_qtde %>' />
+                            value='<%= (tipoPagtoPesquisado.getTpg_qtde()==null) ? "" : tipoPagtoPesquisado.getTpg_qtde() %>' />
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="tpg_ativoField"
                             name="tpg_ativoField"
-                            <%= tpg_ativo == null ? "" : tpg_ativo == "S" ? "checked" : "" %>/>
+                            <%= tipoPagtoPesquisado.getTpg_ativo() == null ? "" : tipoPagtoPesquisado.getTpg_ativo() == "S" ? "checked" : "" %>/>
                             <label for="tpg_ativoField" class="form-check-label">Ativo?</label>
                         </div>
                     </div>
@@ -86,7 +158,7 @@
                     <div class="mb-3">
                         <div class="input-group">
                             <span class="input-group-text" id="statusField">Status:</span>
-                            <input type="text" class="form-control" id="statusField" name="statusField" disabled
+                            <input type="text" class="form-control" id="status" name="status" disabled
                                 value='<%= (status==null) ? "" : status %>'
                                 aria-describedby="statusField basic-addon4" />
                         </div>
@@ -95,6 +167,32 @@
             </div>
         </form>
     </div>
+
+    <% if(action != null && action.equals("listar")) {%>
+        <table class="table table-striped-columns table-secondary container">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Ativo?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    List<TipoPagto> lista_tipoPagto = tipoPagtoService.listarTodos();
+                    for(int i = 0; i < lista_tipoPagto.size(); i++){
+                %>
+                    <tr>
+                        <td><%= lista_tipoPagto.get(i).tpg_codigo %></td>
+                        <td><%= lista_tipoPagto.get(i).tpg_descricao %></td>
+                        <td><%= lista_tipoPagto.get(i).tpg_qtde %></td>
+                        <td><%= lista_tipoPagto.get(i).tpg_ativo %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
 
     <script src="assets/validador.js"></script>
     <script>
@@ -138,7 +236,8 @@
                 }
 
                 if (validador(required_fields)) {
-                    document.cadastro.action = action + "_tipopagto.jsp"
+                    document.cadastro.action.value=action;
+                    document.cadastro.action = document.cadastro.page.value;
                     document.cadastro.submit()
                 }
             };
